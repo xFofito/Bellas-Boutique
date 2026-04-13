@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | Usuarios</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<style>
+body{
+    background:linear-gradient(135deg,#fdf2f8,#f3e8ff);
+}
+
+/* TITULOS */
+.section-title{
+    font-weight:800;
+    color:#081a37;
+}
+
+/* CARDS */
+.card-soft{
+    border:none;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.06);
+}
+
+/* BOTON */
+.btn-gradient{
+    background:linear-gradient(135deg,#f72585,#8e2de2);
+    color:white;
+    border:none;
+    border-radius:12px;
+    font-weight:600;
+}
+
+.btn-gradient:hover{
+    opacity:.9;
+}
+
+/* BADGES */
+.badge-admin{
+    background:#f3e8ff;
+    color:#7e22ce;
+}
+
+.badge-client{
+    background:#e0e7ff;
+    color:#3730a3;
+}
+
+.badge-active{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.badge-block{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* INPUTS */
+.form-control, .form-select{
+    border-radius:12px;
+}
+
+/* TABLA */
+.table thead{
+    background:#f8fafc;
+}
+
+.navbar {
+    background: linear-gradient(135deg,#f72585,#8e2de2);
+    color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar px-4 py-3 d-flex justify-content-between">
+    <h5 class="mb-0">Gestión de Usuarios</h5>
+    <a href="admin-dashboard.html" class="btn btn-light btn-sm">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</nav>
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h2 class="section-title">Gestión de Usuarios</h2>
+        <p class="text-muted">Administra todos los usuarios </p>
+    </div>
+
+    <!-- STATS -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card card-soft p-4">
+                <small>Total Usuarios</small>
+                <h3 id="totalUsuarios"></h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-soft p-4">
+                <small>Clientes Activos</small>
+                <h3 id="activos" class="text-success"></h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-soft p-4">
+                <small>Nuevos</small>
+                <h3 class="text-primary">12</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-soft p-4">
+                <small>Bloqueados</small>
+                <h3 id="bloqueados" class="text-danger"></h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card card-soft p-4 mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text" id="search" class="form-control" placeholder="Buscar usuario...">
+            </div>
+
+            <div class="col-md-4">
+                <select id="filterStatus" class="form-select">
+                    <option value="all">Estado</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Bloqueado">Bloqueado</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <select id="filterRole" class="form-select">
+                    <option value="all">Rol</option>
+                    <option value="Cliente">Cliente</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLA -->
+    <div class="card card-soft">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Contacto</th>
+                        <th>Pedidos</th>
+                        <th>Total</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaUsuarios"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let usuarios = [
+    {id:1,name:"María López",email:"maria@email.com",phone:"8888-1111",orders:12,total:540000,status:"Activo",date:"15/01/26",role:"Cliente"},
+    {id:2,name:"Ana García",email:"ana@email.com",phone:"8888-2222",orders:8,total:320000,status:"Activo",date:"20/01/26",role:"Cliente"},
+    {id:3,name:"Sofia Rojas",email:"sofia@email.com",phone:"8888-3333",orders:15,total:675000,status:"Activo",date:"10/01/26",role:"Cliente"},
+    {id:4,name:"Laura Pérez",email:"laura@email.com",phone:"8888-4444",orders:5,total:185000,status:"Activo",date:"25/02/26",role:"Cliente"},
+    {id:5,name:"Admin Principal",email:"admin@bellas.com",phone:"2222-3333",orders:0,total:0,status:"Activo",date:"01/01/26",role:"Admin"}
+];
+
+const tabla = document.getElementById("tablaUsuarios");
+
+function render(){
+    const search = document.getElementById("search").value.toLowerCase();
+    const status = document.getElementById("filterStatus").value;
+    const role = document.getElementById("filterRole").value;
+
+    let filtrados = usuarios.filter(u=>{
+        return (
+            (u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search)) &&
+            (status==="all" || u.status===status) &&
+            (role==="all" || u.role===role)
+        );
+    });
+
+    tabla.innerHTML="";
+
+    filtrados.forEach(u=>{
+        tabla.innerHTML += `
+        <tr>
+            <td>
+                <strong>${u.name}</strong><br>
+                <small>ID #${u.id}</small>
+            </td>
+
+            <td>
+                <small>${u.email}</small><br>
+                <small>${u.phone}</small>
+            </td>
+
+            <td>${u.orders}</td>
+
+            <td class="fw-bold text-primary">₡${u.total.toLocaleString()}</td>
+
+            <td>
+                <span class="badge ${u.role==="Admin"?"badge-admin":"badge-client"}">
+                    ${u.role}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${u.status==="Activo"?"badge-active":"badge-block"}">
+                    ${u.status}
+                </span>
+            </td>
+
+            <td>${u.date}</td>
+
+            <td>
+                <button class="btn btn-sm btn-gradient"
+                ${u.role==="Admin"?"disabled":""}
+                onclick="toggle(${u.id})">
+                    ${u.status==="Activo"?"Bloquear":"Activar"}
+                </button>
+            </td>
+        </tr>
+        `;
+    });
+
+    document.getElementById("totalUsuarios").innerText = usuarios.length;
+    document.getElementById("activos").innerText = usuarios.filter(u=>u.status==="Activo" && u.role==="Cliente").length;
+    document.getElementById("bloqueados").innerText = usuarios.filter(u=>u.status==="Bloqueado").length;
+}
+
+function toggle(id){
+    usuarios = usuarios.map(u=>{
+        if(u.id===id){
+            u.status = u.status==="Activo"?"Bloqueado":"Activo";
+        }
+        return u;
+    });
+    render();
+}
+
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("filterStatus").addEventListener("change",render);
+document.getElementById("filterRole").addEventListener("change",render);
+
+render();
+</script>
+
+</body>
+</html>
