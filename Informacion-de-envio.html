@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Información de Envío - Bellas Boutique</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="css/global.css" />
+    <style>
+        .page-wrap{max-width:1180px;margin:28px auto;padding:0 24px;display:flex;gap:28px;align-items:flex-start}
+        .left{flex:1}
+        .right{width:360px}
+        .card-form{padding:22px;border-radius:12px;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+        .summary{padding:20px;border-radius:12px;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+        .form-label{font-weight:600;font-size:0.95rem}
+        .btn-continue{width:100%;padding:14px;border-radius:12px;border:none;color:#fff;background:linear-gradient(90deg,#f72585,#8e2de2);}
+    </style>
+</head>
+<body>
+    <!-- Navbar (same as other pages) -->
+    <nav class="navbar navbar-expand-lg navbar-custom py-3">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-3" href="index.html">
+        <div class="logo-circle brand-gradient">B</div>
+        <div>
+            <div class="brand-title">Bellas Boutique</div>
+            <small class="text-muted">Estilo & Elegancia</small>
+        </div>
+        </a>
+
+        <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarContenido"
+        aria-controls="navbarContenido"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        >
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContenido">
+        <form class="d-none d-lg-flex mx-auto search-form" onsubmit="return false;">
+            <div class="input-group">
+            <span class="input-group-text search-icon">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                class="form-control search-rounded"
+                type="search"
+                placeholder="Buscar productos..."
+                id="busquedaInput"
+            />
+            </div>
+        </form>
+
+        <ul class="navbar-nav align-items-lg-center ms-auto gap-lg-3 position-relative">
+            <li class="nav-item">
+            <a class="nav-link active-link" href="catalogo.html">Catálogo</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="soporte.html">Soporte</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link icon-link" href="perfil.html">
+                <i class="bi bi-person"></i>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link icon-link position-relative" href="carrito.html">
+                <i class="bi bi-cart3"></i>
+                <span class="cart-badge" id="cartBadge">0</span>
+            </a>
+            </li>
+        </ul>
+        </div>
+    </div>
+    </nav>
+
+    <div class="page-wrap">
+        <div class="left">
+            <h2>Información de Envío</h2>
+            <div class="card-form mt-3">
+                <div class="mb-3">
+                    <label class="form-label">Nombre Completo</label>
+                    <input id="ship-name" class="form-control" />
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input id="ship-email" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input id="ship-phone" class="form-control phone-mask" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Dirección</label>
+                    <input id="ship-address" class="form-control" />
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Ciudad</label>
+                        <input id="ship-city" class="form-control" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Provincia</label>
+                        <select id="ship-province" class="form-select">
+                            <option value="">-- Seleccionar --</option>
+                            <option>San José</option>
+                            <option>Alajuela</option>
+                            <option>Cartago</option>
+                            <option>Heredia</option>
+                            <option>Guanacaste</option>
+                            <option>Puntarenas</option>
+                            <option>Limón</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Código Postal</label>
+                        <input id="ship-postal" class="form-control postal-mask" />
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button id="proceed-payment" class="btn-continue">Continuar al Pago</button>
+                </div>
+            </div>
+        </div>
+
+        <aside class="right">
+            <div class="summary">
+                <h4>Resumen del Pedido</h4>
+                <div id="summary-items" style="max-height:260px;overflow:auto;margin-top:12px;margin-bottom:12px"></div>
+                <div class="mt-3 summary-row"><div>Subtotal</div><div id="sum-subtotal">₡0</div></div>
+                <div class="summary-row"><div>Envío</div><div id="sum-shipping">—</div></div>
+                <div class="summary-row"><div>Descuento</div><div id="sum-discount">—</div></div>
+                <hr />
+                <div class="summary-row" style="font-weight:800;font-size:1.15rem"><div>Total</div><div id="sum-total">₡0</div></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-gradient mt-5">
+    <div class="container">
+        <div class="row g-4">
+        <div class="col-md-3">
+            <h4 class="fw-bold">Bellas Boutique</h4>
+            <p class="mb-0">Tu destino para moda elegante y accesorios únicos.</p>
+        </div>
+        <div class="col-md-3">
+            <h5 class="fw-bold">Comprar</h5>
+            <ul class="list-unstyled footer-links"><li><a href="catalogo.html">Catálogo</a></li><li><a href="catalogo.html">Nuevos Ingresos</a></li><li><a href="catalogo.html">Ofertas</a></li></ul>
+        </div>
+        <div class="col-md-3">
+            <h5 class="fw-bold">Ayuda</h5>
+            <ul class="list-unstyled footer-links"><li><a href="soporte.html">Soporte</a></li><li><a href="soporte.html">Envíos</a></li><li><a href="soporte.html">Devoluciones</a></li></ul>
+        </div>
+        <div class="col-md-3">
+            <h5 class="fw-bold">Contacto</h5>
+            <ul class="list-unstyled footer-links"><li>info@bellasboutique.com</li><li>+506 2222-3333</li><li>+506 8888-9999</li></ul>
+        </div>
+        </div>
+        <hr class="footer-divider" />
+        <p class="text-center mb-0">© 2026 Bellas Boutique. Todos los derechos reservados.</p>
+    </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+    <script src="JS/utils.js"></script>
+    <script>
+        const CART_KEY = 'bb_cart_v1';
+        const COUPON_KEY = 'bb_coupon_v1';
+        const SHIPPING_KEY = 'bb_shipping_v1';
+
+        function format(n){ return '₡' + Number(n || 0).toLocaleString(); }
+
+        function escapeHtml(s){ return String(s || '').replace(/[&<>"]+/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]); }); }
+
+        // centralized showToast from JS/utils.js will be used
+
+        function loadCartSummary(){
+            const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            const coupon = localStorage.getItem(COUPON_KEY) || '';
+            const subtotal = cart.reduce((s,i)=>s + (Number(i.price)||0) * (Number(i.qty)||0), 0);
+            const shippingEl = document.getElementById('sum-shipping');
+            let shipping = 0;
+            if(subtotal === 0){ shippingEl.textContent = '—'; document.getElementById('sum-subtotal').textContent = format(0); document.getElementById('sum-total').textContent = format(0); return; }
+            renderSummaryItems(cart);
+            if(subtotal >= 150000){ shipping = 0; shippingEl.innerHTML = '<span style="color:green">Gratis</span>'; } else { shipping = 12000; shippingEl.textContent = format(shipping); }
+            let total = subtotal + shipping;
+            let discountText = '—';
+            if(coupon === 'BELLAS10'){
+                // 10% off subtotal+shipping
+                const discounted = Math.round((subtotal + shipping) * 0.9);
+                discountText = '10%';
+                total = discounted;
+            }
+            document.getElementById('sum-subtotal').textContent = format(subtotal);
+            document.getElementById('sum-discount').textContent = discountText;
+            document.getElementById('sum-total').textContent = format(total);
+        }
+
+        function renderSummaryItems(cart){
+            const container = document.getElementById('summary-items');
+            if(!container) return;
+            if(!cart || cart.length===0){ container.innerHTML = '<div class="muted">No hay productos en el carrito.</div>'; return; }
+            container.innerHTML = cart.map(item => {
+                const itemTotal = (Number(item.price)||0) * (Number(item.qty)||0);
+                return `
+                    <div style="display:flex;gap:12px;align-items:center;padding:8px;border-bottom:1px solid #f1f3f5">
+                        <div style="width:56px;height:56px;flex:0 0 56px;overflow:hidden;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center">
+                            <img src="${item.img || 'images/placeholder.svg'}" style="width:100%;height:100%;object-fit:cover" onerror="this.onerror=null;this.src='images/placeholder.svg'" />
+                        </div>
+                        <div style="flex:1">
+                            <div style="font-weight:700">${escapeHtml(item.name)}</div>
+                            <div class="price-small">${escapeHtml(item.color || '')} ${escapeHtml(item.size || '')}</div>
+                        </div>
+                        <div style="text-align:right">
+                            <div style="font-weight:700">${format(itemTotal)}</div>
+                            <div class="price-small">${format(item.price)} c/u x ${item.qty}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function prefillForm(){
+            const saved = JSON.parse(localStorage.getItem(SHIPPING_KEY) || '{}');
+            if(!saved) return;
+            if(saved.name) document.getElementById('ship-name').value = saved.name;
+            if(saved.email) document.getElementById('ship-email').value = saved.email;
+            if(saved.phone) document.getElementById('ship-phone').value = saved.phone;
+            if(saved.address) document.getElementById('ship-address').value = saved.address;
+            if(saved.city) document.getElementById('ship-city').value = saved.city;
+            if(saved.province) document.getElementById('ship-province').value = saved.province;
+            if(saved.postal) document.getElementById('ship-postal').value = saved.postal;
+        }
+
+        document.getElementById && document.addEventListener('DOMContentLoaded', ()=>{
+            // badge count
+            const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            const totalQty = cart.reduce((s,i)=>s + (i.qty||0), 0);
+            const b = document.getElementById('cartBadge'); if(b) b.textContent = totalQty;
+
+            loadCartSummary();
+            prefillForm();
+
+            // autosave on input/change
+            const inputs = ['ship-name','ship-email','ship-phone','ship-address','ship-city','ship-province','ship-postal'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if(!el) return;
+                el.addEventListener('input', ()=>{ saveShippingDraft(); });
+                el.addEventListener('change', ()=>{ saveShippingDraft(); });
+            });
+
+            document.getElementById('proceed-payment').addEventListener('click', (e)=>{
+                e.preventDefault();
+                // Validate minimal fields with simple regex
+                const name = document.getElementById('ship-name').value.trim();
+                const email = document.getElementById('ship-email').value.trim();
+                const phone = document.getElementById('ship-phone').value.trim();
+                const address = document.getElementById('ship-address').value.trim();
+                const city = document.getElementById('ship-city').value.trim();
+                const province = document.getElementById('ship-province').value.trim();
+                const postal = document.getElementById('ship-postal').value.trim();
+                // basic validations
+                if(!name){ showToast('Nombre es obligatorio', { type: 'danger' }); return; }
+                if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast('Email inválido', { type: 'danger' }); return; }
+                if(!/^\d{7,8}$/.test(phone)){ showToast('Teléfono inválido (7 u 8 dígitos)', { type: 'danger' }); return; }
+                if(!address){ showToast('Dirección es obligatoria', { type: 'danger' }); return; }
+                if(!city){ showToast('Ciudad es obligatoria', { type: 'danger' }); return; }
+                if(!province){ showToast('Selecciona una provincia', { type: 'danger' }); return; }
+                if(postal && !/^\d{4,5}$/.test(postal)){ showToast('Código postal inválido', { type: 'danger' }); return; }
+
+                // Save shipping info for next page
+                const shipping = { name, email, phone, address, city, province, postal };
+                localStorage.setItem(SHIPPING_KEY, JSON.stringify(shipping));
+                // Navigate to pago page
+                window.location.href = 'pago.html';
+            });
+
+            function saveShippingDraft(){
+                const name = document.getElementById('ship-name').value.trim();
+                const email = document.getElementById('ship-email').value.trim();
+                const phone = document.getElementById('ship-phone').value.trim();
+                const address = document.getElementById('ship-address').value.trim();
+                const city = document.getElementById('ship-city').value.trim();
+                const province = document.getElementById('ship-province').value.trim();
+                const postal = document.getElementById('ship-postal').value.trim();
+                const shipping = { name, email, phone, address, city, province, postal };
+                localStorage.setItem(SHIPPING_KEY, JSON.stringify(shipping));
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

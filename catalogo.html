@@ -156,6 +156,7 @@
     </footer>
 
     <script src="js/data.js"></script>
+    <script src="JS/utils.js"></script>
     <script>
     let categoriaActual = "Todos";
 
@@ -336,8 +337,8 @@
             agregarAlCarritoConOpciones(productoId, { color, size, qty });
         }
 
-        // Lightweight toast implementation (no alert/confirm)
-        function injectModalAndToast(){
+    // Lightweight toast implementation (no alert/confirm)
+    function injectModalAndToast(){
                 if(document.getElementById('addModal')) return;
                 const html = `
                 <!-- Add modal -->
@@ -384,52 +385,12 @@
                     </div>
                 </div>
 
-                <!-- Toast container -->
+                <!-- Toast container (utils will also create one if missing) -->
                 <div id="bb-toast" style="position:fixed;right:18px;bottom:18px;z-index:1050;"></div>
                 `;
                 document.body.insertAdjacentHTML('beforeend', html);
         }
 
-    function showToast(message, opts={}){
-        // Ensure toast container exists (create dynamically if needed)
-        let container = document.getElementById('bb-toast');
-        if(!container){
-            container = document.createElement('div');
-            container.id = 'bb-toast';
-            container.style.position = 'fixed';
-            container.style.right = '18px';
-            container.style.bottom = '18px';
-            container.style.zIndex = '1050';
-            document.body.appendChild(container);
-        }
-                const id = 't' + Date.now();
-                const type = opts.type === 'danger' ? 'danger' : 'success';
-                const actionText = opts.actionText || null;
-                const action = opts.action || null;
-
-                const el = document.createElement('div');
-                el.id = id;
-                el.className = 'toast show';
-                el.style.minWidth = '240px';
-                el.style.marginTop = '8px';
-                el.style.boxShadow = '0 6px 20px rgba(0,0,0,0.12)';
-                el.innerHTML = `
-                        <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:${type==='danger'? '#fee2e2':'#f8fafc'};">
-                            <div style="flex:1">
-                                <div style="font-weight:700;color:${type==='danger'? '#b91c1c':'#0f1724'}">${message}</div>
-                            </div>
-                            ${actionText? `<button class="btn btn-sm btn-outline-primary" id="${id}-act">${actionText}</button>` : ''}
-                            <button class="btn-close" aria-label="Cerrar" id="${id}-close" style="margin-left:8px"></button>
-                        </div>
-                `;
-                container.appendChild(el);
-
-                if(actionText && action){
-                        el.querySelector('#'+id+'-act').addEventListener('click', action);
-                }
-                el.querySelector('#'+id+'-close').addEventListener('click', ()=>{ el.remove(); });
-                setTimeout(()=>{ if(document.getElementById(id)) document.getElementById(id).remove(); }, 5000);
-        }
 
     function obtenerProductosFiltrados() {
         const textoBusqueda = busquedaInput.value.trim().toLowerCase();

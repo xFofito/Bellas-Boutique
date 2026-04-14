@@ -191,63 +191,30 @@
     </div>
     </footer>
 
+    <script src="JS/utils.js"></script>
     <script>
-        const CART_KEY = 'bb_cart_v1';
-        let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-        let coupon = null;
+    const CART_KEY = 'bb_cart_v1';
+    const COUPON_KEY = 'bb_coupon_v1';
+    let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    // cargar cupón persistido si existe
+    let coupon = localStorage.getItem(COUPON_KEY) || null;
 
         function save() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateBadge(); }
         function format(n){ return '₡' + n.toLocaleString(); }
 
-                // lightweight toast used in this page (matches catalogo style)
-                (function ensureToastContainer(){
-                        if(document.getElementById('bb-toast-cart')) return;
-                        const div = document.createElement('div');
-                        div.id = 'bb-toast-cart';
-                        div.style.position = 'fixed';
-                        div.style.right = '18px';
-                        div.style.bottom = '18px';
-                        div.style.zIndex = '1050';
-                        document.body.appendChild(div);
-                })();
+        // Ensure a toast container is present (utils will also create the default one)
+        (function ensureToastContainer(){
+            if(document.getElementById('bb-toast')) return;
+            const div = document.createElement('div');
+            div.id = 'bb-toast';
+            div.style.position = 'fixed';
+            div.style.right = '18px';
+            div.style.bottom = '18px';
+            div.style.zIndex = '1050';
+            document.body.appendChild(div);
+        })();
 
-        function showToast(message, opts={}){
-            // Ensure toast container exists; if not, create it to avoid native alert.
-            let container = document.getElementById('bb-toast-cart');
-            if(!container){
-                const div = document.createElement('div');
-                div.id = 'bb-toast-cart';
-                div.style.position = 'fixed';
-                div.style.right = '18px';
-                div.style.bottom = '18px';
-                div.style.zIndex = '1050';
-                document.body.appendChild(div);
-                container = div;
-            }
-                        const id = 't' + Date.now();
-                        const type = opts.type === 'danger' ? 'danger' : 'success';
-                        const actionText = opts.actionText || null;
-                        const action = opts.action || null;
-                        const el = document.createElement('div');
-                        el.id = id;
-                        el.className = 'toast show';
-                        el.style.minWidth = '240px';
-                        el.style.marginTop = '8px';
-                        el.style.boxShadow = '0 6px 20px rgba(0,0,0,0.12)';
-                        el.innerHTML = `
-                                <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:${type==='danger'? '#fee2e2':'#f8fafc'};">
-                                    <div style="flex:1">
-                                        <div style="font-weight:700;color:${type==='danger'? '#b91c1c':'#0f1724'}">${message}</div>
-                                    </div>
-                                    ${actionText? `<button class="btn btn-sm btn-outline-primary" id="${id}-act">${actionText}</button>` : ''}
-                                    <button class="btn-close" aria-label="Cerrar" id="${id}-close" style="margin-left:8px"></button>
-                                </div>
-                        `;
-                        container.appendChild(el);
-                        if(actionText && action){ el.querySelector('#'+id+'-act').addEventListener('click', action); }
-                        el.querySelector('#'+id+'-close').addEventListener('click', ()=>{ el.remove(); });
-                        setTimeout(()=>{ if(document.getElementById(id)) document.getElementById(id).remove(); }, 5000);
-                }
+    // Centralized showToast is provided by JS/utils.js
 
         function updateBadge(){
             const b = document.getElementById('cartBadge');
@@ -350,21 +317,25 @@
             if(!code){ showToast('Ingrese un código.', { type: 'danger' }); return; }
             if(code === 'BELLAS10'){
                 coupon = code;
+                localStorage.setItem(COUPON_KEY, coupon);
                 showToast('Cupón aplicado: 10% de descuento', { type: 'success' });
             } else {
                 coupon = null;
+                localStorage.setItem(COUPON_KEY, '');
                 showToast('Cupón no válido', { type: 'danger' });
             }
             recalcTotals();
         });
 
         document.getElementById('continue').addEventListener('click', ()=>{
-            window.location.href = 'catalogo.html';
+            // Ir a la página de información de envío
+            window.location.href = 'Informacion-de-envio.html';
         });
 
         document.getElementById('checkout').addEventListener('click', ()=>{
             if(cart.length === 0){ showToast('El carrito está vacío', { type: 'danger' }); return; }
-            showToast('Proceder al pago (simulado).', { type: 'success' });
+            // Always redirect to the shipping information page first
+            window.location.href = 'Informacion-de-envio.html';
         });
 
          // función pública para que el catálogo llame:
