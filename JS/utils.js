@@ -1,5 +1,4 @@
-// Shared utilities for the site
-// Contains a centralized showToast and input mask initialization (uses Cleave.js when available)
+ 
 (function(){
     window.ensureToastContainer = function(containerId='bb-toast'){
         let container = document.getElementById(containerId);
@@ -59,8 +58,7 @@
     };
     window.clearInvalid = function(inputEl){ if(!inputEl) return; inputEl.classList.remove('is-invalid'); const next = inputEl.parentNode.querySelector('.invalid-feedback'); if(next) next.textContent = ''; };
 
-    // Initialize input masks using Cleave.js when available
-    window.initInputMasks = function(){
+     window.initInputMasks = function(){
         try{
             if(typeof Cleave === 'undefined') return;
             // credit card numbers
@@ -72,18 +70,15 @@
                 if(el.__cleave) return;
                 el.__cleave = new Cleave(el, { date: true, datePattern: ['m','y'] });
             });
-            // cvv numeric
-            document.querySelectorAll('.cc-cvv').forEach(el=>{
+             document.querySelectorAll('.cc-cvv').forEach(el=>{
                 if(el.__cleave) return;
                 el.__cleave = new Cleave(el, { numericOnly: true, blocks: [4] });
             });
-            // phone mask - simple blocks for Costa Rica
-            document.querySelectorAll('.phone-mask').forEach(el=>{
+             document.querySelectorAll('.phone-mask').forEach(el=>{
                 if(el.__cleave) return;
                 el.__cleave = new Cleave(el, { phone: true, phoneRegionCode: 'CR' });
             });
-            // postal code numeric
-            document.querySelectorAll('.postal-mask').forEach(el=>{
+             document.querySelectorAll('.postal-mask').forEach(el=>{
                 if(el.__cleave) return;
                 el.__cleave = new Cleave(el, { numericOnly: true, blocks: [5] });
             });
@@ -95,3 +90,4 @@
          setTimeout(()=>{ try{ initInputMasks(); }catch(e){} }, 200);
     });
 })();
+///UTILS
